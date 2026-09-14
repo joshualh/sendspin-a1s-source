@@ -124,6 +124,17 @@ class SendspinHub final : public Component,
   ///   - `EXTERNAL_SOURCE`: client is playing from a non-Sendspin source.
   void update_state(sendspin::SendspinClientState state);
 
+  /// @brief Returns the active server's identity from its hello handshake, or nullopt when not connected.
+  ///
+  /// Must be called from the main loop thread.
+  std::optional<sendspin::ServerInformationObject> get_server_information() const;
+
+  /// @brief Returns true while connected and the server reports the group as playing.
+  ///
+  /// The library keeps the last group state across a disconnect, so the connection is checked first.
+  /// Must be called from the main loop thread.
+  bool is_group_playing() const;
+
   // --- Configuration setters (called from codegen) ---
 
   template<typename F> void add_group_update_callback(F &&callback) {

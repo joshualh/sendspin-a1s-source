@@ -123,6 +123,24 @@ void SendspinHub::update_state(sendspin::SendspinClientState state) {
   }
 }
 
+// THREAD CONTEXT: Main loop (invoked from lambdas and Sendspin components)
+std::optional<sendspin::ServerInformationObject> SendspinHub::get_server_information() const {
+  if (this->is_ready()) {
+    return this->client_->get_server_information();
+  }
+  return std::nullopt;
+}
+
+// THREAD CONTEXT: Main loop (invoked from lambdas and Sendspin components)
+bool SendspinHub::is_group_playing() const {
+  if (!this->is_ready() || !this->client_->is_connected()) {
+    return false;
+  }
+  const auto &group = this->client_->get_group_state();
+  return group.playback_state.has_value() &&
+         group.playback_state.value() == sendspin::SendspinPlaybackState::PLAYING;
+}
+
 const char *SendspinHub::get_client_id_into_buffer(std::span<char, MAC_ADDRESS_PRETTY_BUFFER_SIZE> buf) {
   // The server matches client_id against the L2 source MAC of the device's multicast traffic.
   // ESP-IDF derives the ethernet MAC as base+3 by default on ESP32-S3, so we cannot use the
