@@ -5,7 +5,10 @@ from typing import Any
 from esphome import automation
 import esphome.codegen as cg
 from esphome.components import esp32, mdns, network, psram, socket, wifi, microphone
-from esphome.components.const import CONF_ENABLED, CONF_MANUFACTURER
+from esphome.components.const import CONF_ENABLED
+
+# Available in newer ESPHome; define locally for ESPHome 2026.9.x compatibility.
+CONF_MANUFACTURER = "manufacturer"
 from esphome.components.mdns import DOMAIN as MDNS_DOMAIN
 import esphome.config_validation as cv
 from esphome.const import (
