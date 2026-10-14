@@ -4,12 +4,11 @@ from typing import Any
 
 from esphome import automation
 import esphome.codegen as cg
-from esphome.components import esp32, mdns, network, psram, socket, wifi, microphone
+from esphome.components import esp32, network, psram, socket, wifi, microphone
 from esphome.components.const import CONF_ENABLED
 
 # Available in newer ESPHome; define locally for ESPHome 2026.9.x compatibility.
 CONF_MANUFACTURER = "manufacturer"
-from esphome.components.mdns import DOMAIN as MDNS_DOMAIN
 import esphome.config_validation as cv
 from esphome.const import (
     CONF_BUFFER_SIZE,
@@ -460,10 +459,8 @@ async def to_code(config: ConfigType) -> None:
 
     cg.add_define("USE_SENDSPIN", True)  # for MDNS and the native API
 
-    # Service starts disabled and the hub enables it; always advertised where unsupported
-    if mdns.request_service_enable_disable():
-        mdns_var = await cg.get_variable(CORE.config[MDNS_DOMAIN][CONF_ID])
-        cg.add(var.set_mdns(mdns_var))
+    # ESPHome 2026.9.1 does not offer the newer dynamic mDNS service API.
+    # The legacy sendspin discovery service remains provided by AUTO_LOAD.
 
     data = _get_data()
 
