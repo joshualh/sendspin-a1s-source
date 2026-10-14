@@ -393,24 +393,37 @@ SENDSPIN_SIMPLE_ACTION_SCHEMA = cv.All(
 )
 
 
-automation.register_apply_action(
-    "sendspin.switch",
-    SENDSPIN_SIMPLE_ACTION_SCHEMA,
-    automation.ApplyCall("switch_client()"),
+# ESPHome 2026.9-compatible action registration (register_apply_action is newer).
+SendspinSwitchAction = sendspin_ns.class_(
+    "SendspinSwitchAction", automation.Action, cg.Parented.template(SendspinHub)
+)
+SendspinConfirmPairingWindowAction = sendspin_ns.class_(
+    "SendspinConfirmPairingWindowAction", automation.Action, cg.Parented.template(SendspinHub)
+)
+SendspinCancelPairingWindowAction = sendspin_ns.class_(
+    "SendspinCancelPairingWindowAction", automation.Action, cg.Parented.template(SendspinHub)
 )
 
 
-automation.register_apply_action(
-    "sendspin.confirm_pairing_window",
-    SENDSPIN_HUB_ACTION_SCHEMA,
-    automation.ApplyCall("confirm_pairing_window()"),
-)
+@automation.register_action("sendspin.switch", SendspinSwitchAction, SENDSPIN_SIMPLE_ACTION_SCHEMA)
+async def sendspin_switch_to_code(config, action_id, template_arg, args):
+    var = cg.new_Pvariable(action_id, template_arg)
+    await cg.register_parented(var, config[CONF_ID])
+    return var
 
-automation.register_apply_action(
-    "sendspin.cancel_pairing_window",
-    SENDSPIN_HUB_ACTION_SCHEMA,
-    automation.ApplyCall("cancel_pairing_window()"),
-)
+
+@automation.register_action("sendspin.confirm_pairing_window", SendspinConfirmPairingWindowAction, SENDSPIN_HUB_ACTION_SCHEMA)
+async def sendspin_confirm_pairing_to_code(config, action_id, template_arg, args):
+    var = cg.new_Pvariable(action_id, template_arg)
+    await cg.register_parented(var, config[CONF_ID])
+    return var
+
+
+@automation.register_action("sendspin.cancel_pairing_window", SendspinCancelPairingWindowAction, SENDSPIN_HUB_ACTION_SCHEMA)
+async def sendspin_cancel_pairing_to_code(config, action_id, template_arg, args):
+    var = cg.new_Pvariable(action_id, template_arg)
+    await cg.register_parented(var, config[CONF_ID])
+    return var
 
 
 async def to_code(config: ConfigType) -> None:
