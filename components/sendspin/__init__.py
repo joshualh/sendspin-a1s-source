@@ -568,7 +568,7 @@ async def to_code(config: ConfigType) -> None:
     else:
         esp32.add_idf_sdkconfig_option("CONFIG_SENDSPIN_ENABLE_PLAYER", False)
 
-    source_uses_opus = (source_config := config.get(CONF_SOURCE)) is not None and source_config.get(CONF_CODEC) == CODEC_FORMAT_OPUS
+    source_uses_opus = (source_config := config.get(CONF_SOURCE)) is not None and source_config.get(CONF_CODEC) is CODEC_FORMAT_OPUS
     player_uses_opus = data.player_support and CODEC_OPUS in data.player_config[CONF_CODECS]
     if not player_uses_opus and not source_uses_opus:
         esp32.add_idf_sdkconfig_option("CONFIG_SENDSPIN_ENABLE_OPUS", False)
