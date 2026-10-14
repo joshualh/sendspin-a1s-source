@@ -469,7 +469,7 @@ async def to_code(config: ConfigType) -> None:
     esp32.add_idf_component(
         name="sendspin/sendspin-cpp",
         repo="https://github.com/joshualh/sendspin-cpp.git",
-        ref="cb24627b81e05f4ea7e7dcee9e38840d6ca5be71",
+        ref="6d7eceff994624f45b0c91882a740720ea58e33e",
     )
     # ESPHome 2026.9.1 has no esp32.request_tls(); ESP-IDF resolves TLS dependencies.
 
