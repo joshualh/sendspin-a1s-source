@@ -33,4 +33,4 @@ async def to_code(config):
     if conf := config.get(CONF_PAIRING_TOKEN):
         var = await text_sensor.new_text_sensor(conf)
         await cg.register_component(var, conf)
-        await cg.register_parented(var, await cg.get_variable(config[CONF_SENDSPIN_ID]))
+        await cg.register_parented(var, config[CONF_SENDSPIN_ID])
