@@ -41,7 +41,7 @@ CONF_OPUS_COMPLEXITY = "opus_complexity"
 # sendspin-cpp build under test: the source@v1 stack (Sendspin/sendspin-cpp#112-#117). The IDF component manager pins
 # the resolved commit in dependencies.lock, so clean the build files to pick up a new push to this branch.
 SENDSPIN_CPP_REPO = "https://github.com/Sendspin/sendspin-cpp.git"
-SENDSPIN_CPP_REF = "source-role/06-example-docs"
+SENDSPIN_CPP_REF = "main"
 
 # Matches ARTWORK_MAX_SLOTS in sendspin-cpp.
 MAX_ARTWORK_SLOTS = 4
