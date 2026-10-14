@@ -27,6 +27,9 @@ esphome:
           // ADCCONTROL4: 16-bit I2S framing. The driver writes 0x0D (left-justified) but i2s_audio reads Philips
           // I2S, which is one bit late: every sample loses its sign bit and L/R swap. ESP-ADF writes 0x0C here.
           id(es8388_dac)->write_byte(0x0C, 0x0C);
+          // ADCCONTROL3: explicitly select stereo ADC capture rather than the driver's mono-right setting.
+          // This is a controlled test for thin/reduced-depth LINE2 audio; it does not fix physical mic bleed.
+          id(es8388_dac)->write_byte(0x0B, 0x00);
           // ADCCONTROL10: ALC off (the driver's voice ALC pumps music); PGA gain stays at ADCCONTROL1's 0 dB
           id(es8388_dac)->write_byte(0x12, 0x22);
           // ADCCONTROL14: noise gate off (the driver's gate mutes the ADC below -40.5 dBFS)
@@ -55,7 +58,7 @@ captive_portal:
 
 external_components:
   # To iterate on the component without pushing, use `source: {type: local, path: components}` from a clone
-  - source: github://chrisuthe/sendspin-a1s-source@main
+  - source: github://joshualh/sendspin-a1s-source@main
     components: [sendspin]
     refresh: always
 
