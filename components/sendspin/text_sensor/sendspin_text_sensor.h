@@ -1,5 +1,8 @@
 #pragma once
 
+// Include the optional pairing-token sensor alongside the legacy metadata sensor.
+#include "esphome/components/sendspin/sendspin_pairing_token_text_sensor.h"
+
 #include "esphome/core/defines.h"
 
 #if defined(USE_ESP32) && defined(USE_SENDSPIN_METADATA) && defined(USE_TEXT_SENSOR)
