@@ -405,21 +405,21 @@ SendspinCancelPairingWindowAction = sendspin_ns.class_(
 )
 
 
-@automation.register_action("sendspin.switch", SendspinSwitchAction, SENDSPIN_SIMPLE_ACTION_SCHEMA)
+@automation.register_action("sendspin.switch", SendspinSwitchAction, SENDSPIN_SIMPLE_ACTION_SCHEMA, synchronous=True)
 async def sendspin_switch_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
-@automation.register_action("sendspin.confirm_pairing_window", SendspinConfirmPairingWindowAction, SENDSPIN_HUB_ACTION_SCHEMA)
+@automation.register_action("sendspin.confirm_pairing_window", SendspinConfirmPairingWindowAction, SENDSPIN_HUB_ACTION_SCHEMA, synchronous=True)
 async def sendspin_confirm_pairing_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
-@automation.register_action("sendspin.cancel_pairing_window", SendspinCancelPairingWindowAction, SENDSPIN_HUB_ACTION_SCHEMA)
+@automation.register_action("sendspin.cancel_pairing_window", SendspinCancelPairingWindowAction, SENDSPIN_HUB_ACTION_SCHEMA, synchronous=True)
 async def sendspin_cancel_pairing_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
@@ -467,8 +467,7 @@ async def to_code(config: ConfigType) -> None:
 
     # sendspin-cpp library
     esp32.add_idf_component(name="sendspin/sendspin-cpp", ref="0.9.3")
-    # esp_websocket_client links esp_tls even for ws:// connections.
-    esp32.request_tls()
+    # ESPHome 2026.9.1 has no esp32.request_tls(); ESP-IDF resolves TLS dependencies.
 
     cg.add_define("USE_SENDSPIN", True)  # for MDNS and the native API
 
