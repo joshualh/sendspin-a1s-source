@@ -25,7 +25,7 @@
 
 namespace esphome::sendspin_ {
 
-ESPHOME_LOG_TAG(TAG, "sendspin.hub");
+static const char *const TAG = "sendspin.hub";
 
 namespace {
 
