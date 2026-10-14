@@ -20,8 +20,6 @@ from esphome.const import (
     CONF_SAMPLE_RATE,
     CONF_SOURCE,
     CONF_MICROPHONE,
-    CONF_CHUNK_DURATION,
-    CONF_CODEC,
     CONF_TASK_STACK_IN_PSRAM,
     CONF_VERSION,
     CONF_WIDTH,
@@ -558,7 +556,9 @@ async def to_code(config: ConfigType) -> None:
     else:
         esp32.add_idf_sdkconfig_option("CONFIG_SENDSPIN_ENABLE_PLAYER", False)
 
-    if not data.player_support or CODEC_OPUS not in data.player_config[CONF_CODECS]:
+    source_uses_opus = (source_config := config.get(CONF_SOURCE)) is not None and source_config.get(CONF_CODEC) == CODEC_FORMAT_OPUS
+    player_uses_opus = data.player_support and CODEC_OPUS in data.player_config[CONF_CODECS]
+    if not player_uses_opus and not source_uses_opus:
         esp32.add_idf_sdkconfig_option("CONFIG_SENDSPIN_ENABLE_OPUS", False)
 
     if data.visualizer_support:
