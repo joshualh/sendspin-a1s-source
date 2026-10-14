@@ -1,0 +1,33 @@
+--- a/src/noise_handshake.cpp
++++ b/src/noise_handshake.cpp
+@@ -176,15 +176,38 @@
+-    // messaging.md "noise/handshake": the payload declares which category the server is using the
+-    // referenced PSK as. A missing or unknown code is a malformed payload, which connection.md
+-    // "Failure Handling" makes a silent failure.
++    // Music Assistant 2.10.6 (aiosendspin 9.1.1) sends {"psk_id":"..."}
++    // without psk_category. Retain strict checks for any explicitly supplied category.
++    // Infer an omitted category ONLY from credentials actually held in the store.
+     auto psk_category = psk_category_from_string(psk_category_code);
+-    if (!psk_category.has_value()) {
++    if (psk_category_code.empty()) {
++        for (PskCategory candidate : {PskCategory::SENTINEL, PskCategory::PAIRING,
++                                      PskCategory::LONG_TERM}) {
++            if (record_store.resolve_by_psk_id(psk_id, candidate).has_value()) {
++                if (psk_category.has_value()) {
++                    SS_LOGE(TAG, "%s: ambiguous legacy psk_id '%s'", log_prefix, psk_id.c_str());
++                    return std::nullopt;
++                }
++                psk_category = candidate;
++            }
++        }
++        // Unknown PSK IDs should continue into the existing initial-handshake Sentinel
++        // fallback rather than being accepted without authentication.
++        if (!psk_category.has_value() && kind == HandshakeKind::INITIAL) {
++            psk_category = PskCategory::SENTINEL;
++        }
++    }
++    if (!psk_category.has_value()) {
+         SS_LOGE(TAG, "%s: msg1 payload psk_category missing or unknown ('%s')", log_prefix,
+                 psk_category_code.c_str());
+         return std::nullopt;
+     }
