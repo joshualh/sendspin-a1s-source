@@ -459,6 +459,22 @@ class SendspinPollingChild : public PollingComponent, public Parented<SendspinHu
   float get_setup_priority() const override { return sendspin_priority::CHILD; }
 };
 
+// ESPHome 2026.9-compatible automation actions.
+template<typename... Ts> class SendspinSwitchAction : public Action<Ts...>, public Parented<SendspinHub> {
+ public:
+  void play(Ts... x) override { this->parent_->switch_client(); }
+};
+
+template<typename... Ts> class SendspinConfirmPairingWindowAction : public Action<Ts...>, public Parented<SendspinHub> {
+ public:
+  void play(Ts... x) override { this->parent_->confirm_pairing_window(); }
+};
+
+template<typename... Ts> class SendspinCancelPairingWindowAction : public Action<Ts...>, public Parented<SendspinHub> {
+ public:
+  void play(Ts... x) override { this->parent_->cancel_pairing_window(); }
+};
+
 extern SendspinHub *global_sendspin_hub;  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
 }  // namespace esphome::sendspin_
