@@ -460,10 +460,12 @@ class SendspinPollingChild : public PollingComponent, public Parented<SendspinHu
 };
 
 // ESPHome 2026.9-compatible automation actions.
+#ifdef USE_SENDSPIN_CONTROLLER
 template<typename... Ts> class SendspinSwitchAction : public Action<Ts...>, public Parented<SendspinHub> {
  public:
   void play(Ts... x) override { this->parent_->switch_client(); }
 };
+#endif  // USE_SENDSPIN_CONTROLLER
 
 template<typename... Ts> class SendspinConfirmPairingWindowAction : public Action<Ts...>, public Parented<SendspinHub> {
  public:
