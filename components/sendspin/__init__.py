@@ -466,7 +466,11 @@ async def to_code(config: ConfigType) -> None:
     await automation.build_callback_automations(var, config, _CALLBACK_AUTOMATIONS)
 
     # sendspin-cpp library
-    esp32.add_idf_component(name="sendspin/sendspin-cpp", ref="0.9.3")
+    esp32.add_idf_component(
+        name="sendspin/sendspin-cpp",
+        repo="https://github.com/joshualh/sendspin-cpp.git",
+        ref="9c2810645585840785debba511d731269f46a7b7",
+    )
     # ESPHome 2026.9.1 has no esp32.request_tls(); ESP-IDF resolves TLS dependencies.
 
     cg.add_define("USE_SENDSPIN", True)  # for MDNS and the native API
