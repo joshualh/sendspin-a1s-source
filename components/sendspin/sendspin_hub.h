@@ -111,6 +111,9 @@ class SendspinHub final : public Component,
   void on_shutdown() override;
   void dump_config() override;
 
+  /// @brief Returns the Sendspin client ID from the underlying client.
+  StringRef get_client_id() const;
+
   /// @brief Connects the underlying client to the given Sendspin server.
   ///
   /// No-op if the hub's client is not running (see is_client_running()).
